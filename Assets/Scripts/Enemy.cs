@@ -9,6 +9,11 @@ public class Enemy : MonoBehaviour
     public Transform player;
     public float velocidad;
     bool estarAlerta;
+    bool quietonotemeacerques = true;
+    float tiempo = 0;
+    float activar = 5;
+    float toque = 3;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -20,14 +25,34 @@ public class Enemy : MonoBehaviour
     {
        estarAlerta = Physics.CheckSphere(transform.position, radio, capadelPlayer);
 
-        if(estarAlerta == true)
+        if(estarAlerta == true && quietonotemeacerques == true && Time.time >= tiempo)
         {
             Vector3 posPlayer = (new Vector3 (player.position.x, transform.position.y, player.position.z));
             transform.LookAt(posPlayer);
             transform.position = Vector3.MoveTowards(transform.position, posPlayer, velocidad * Time.deltaTime);
+
+        }
+
+        if (Time.time >= tiempo)
+        {
+            quietonotemeacerques = true;
         }
     }
 
+    
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Amaragon"))
+        {
+            toque--;
+            quietonotemeacerques = false;
+            tiempo = Time.time + activar;
+
+            if (toque == 0)
+                Destroy(gameObject);
+        }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

@@ -8,12 +8,14 @@ public class Cubo : MonoBehaviour
     public Transform mano;
     public float fuerza;
 
+
     private bool activo;
     private bool enmano;
     private Vector3 escala;
 
-    private void Start ()
+    private void Start()
     {
+
         escala = cubo.transform.localScale;
     }
     void Update()
@@ -44,17 +46,18 @@ public class Cubo : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown (KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             cubo.transform.SetParent(null);
             cubo.GetComponent<Rigidbody>().isKinematic = false;
             cubo.transform.localScale = escala;
         }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag== ("Player"))
+        if (other.tag == ("Player"))
         {
             activo = true;
         }
@@ -62,9 +65,10 @@ public class Cubo : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag =="Player")
+        if (other.tag == "Player")
         {
             activo = false;
         }
     }
+
 }
