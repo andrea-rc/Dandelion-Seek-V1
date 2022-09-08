@@ -12,8 +12,15 @@ public class Enemy : MonoBehaviour
     bool quietonotemeacerques = true;
     float tiempo = 0;
     float activar = 5;
-    float toque = 3;
-    
+    int vida = 2;
+    Animator caminar;
+    [SerializeField] GameManager gm;
+
+
+    private void Awake()
+    {
+        caminar = GetComponent<Animator>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +37,13 @@ public class Enemy : MonoBehaviour
             Vector3 posPlayer = (new Vector3 (player.position.x, transform.position.y, player.position.z));
             transform.LookAt(posPlayer);
             transform.position = Vector3.MoveTowards(transform.position, posPlayer, velocidad * Time.deltaTime);
+            caminar.SetBool("Idle", false);
+            
 
+        }
+        else
+        {
+            caminar.SetBool("Idle", true);
         }
 
         if (Time.time >= tiempo)
@@ -45,12 +58,19 @@ public class Enemy : MonoBehaviour
     {
         if (collision.collider.CompareTag("Amaragon"))
         {
-            toque--;
-            quietonotemeacerques = false;
-            tiempo = Time.time + activar;
+            if (vida >= 1)
+            {
+                vida = vida - 1;
+                quietonotemeacerques = false;
+                tiempo = Time.time + activar;
+            }
 
-            if (toque == 0)
+
+            if (vida == 0)
+            {
                 Destroy(gameObject);
+                gm.ReducirNumEnemies();
+            }
         }
     }
     private void OnDrawGizmos()
